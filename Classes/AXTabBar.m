@@ -105,8 +105,6 @@
         [button setTitle:item.title forState:UIControlStateNormal];
         [button setBadgeValue:item.badgeValue];
         [button addTarget:self action:@selector(touchesButton:) forControlEvents:UIControlEventTouchDown];
-        [button setTitleColor:self.tintColor forState:UIControlStateSelected];
-        [button setTitleColor:self.tintColor forState:UIControlStateHighlighted];
         [_containerView addSubview:button];
         [buttons addObject:button];
       }
