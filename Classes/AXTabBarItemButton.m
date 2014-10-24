@@ -12,9 +12,6 @@
   self = [super initWithFrame:frame];
   if (self) {
     // Initialization code
-    [self setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-    [self setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
-    [self setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
   }
   return self;
 }
