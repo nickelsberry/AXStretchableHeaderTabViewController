@@ -40,7 +40,7 @@
     [self.layer addSublayer:_bottomSeparator];
 
     _indicatorLayer = [CALayer layer];
-    [self.layer addSublayer:_indicatorLayer];
+    [_containerView.layer addSublayer:_indicatorLayer];
   }
   return self;
 }
