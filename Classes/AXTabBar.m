@@ -163,24 +163,32 @@
 
 #pragma mark - Action
 
-- (void)touchesButton:(UIButton *)sender
-{
-  NSUInteger index = [_tabBarItemButtons indexOfObject:sender];
-  if (index != NSNotFound) {
-    UITabBarItem *selectedItem = _items[index];
-    
-    BOOL shouldSelectItem = YES;
-    if ([_delegate respondsToSelector:@selector(tabBar:shouldSelectItem:)]) {
-      shouldSelectItem = [_delegate tabBar:self shouldSelectItem:selectedItem];
+- (void)touchesButton:(UIButton *)sender {
+    NSUInteger index = [_tabBarItemButtons indexOfObject:sender];
+    if (index != NSNotFound) {
+        UITabBarItem *selectedItem = _items[index];
+        
+        if(self.tabBarStyle == AXTabBarStyleVariableWidthButton) {
+            // If the button is not visible within the current offset of the scroll view, we have to adjust it...
+            if((sender.frame.origin.x + sender.frame.size.width) > (_containerView.contentOffset.x + _containerView.frame.size.width)) {
+                _containerView.contentOffset = CGPointMake((sender.frame.origin.x + sender.frame.size.width) - _containerView.frame.size.width, _containerView.contentOffset.y);
+            } else if(sender.frame.origin.x < _containerView.contentOffset.x) {
+                _containerView.contentOffset = CGPointMake(sender.frame.origin.x, _containerView.contentOffset.y);
+            }
+        }
+        
+        BOOL shouldSelectItem = YES;
+        if ([_delegate respondsToSelector:@selector(tabBar:shouldSelectItem:)]) {
+            shouldSelectItem = [_delegate tabBar:self shouldSelectItem:selectedItem];
+        }
+        if (shouldSelectItem) {
+            [sender setHighlighted:YES];
+            [self setSelectedItem:selectedItem];
+            if ([_delegate respondsToSelector:@selector(tabBar:didSelectItem:)]) {
+                [_delegate tabBar:self didSelectItem:selectedItem];
+            }
+        }
     }
-    if (shouldSelectItem) {
-      [sender setHighlighted:YES];
-      [self setSelectedItem:selectedItem];
-      if ([_delegate respondsToSelector:@selector(tabBar:didSelectItem:)]) {
-        [_delegate tabBar:self didSelectItem:selectedItem];
-      }
-    }
-  }
 }
 
 @end
