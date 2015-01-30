@@ -208,7 +208,8 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
       [viewController.view setFrame:UIEdgeInsetsInsetRect(newFrame, contentInsets)];
     }
   }];
-  [_containerView setContentSize:(CGSize){size.width * _viewControllers.count, 0.0}];
+  NSUInteger controllersToShow = (_shouldAllowSwipingToChangeTabs) ? _viewControllers.count : 1;
+  [_containerView setContentSize:(CGSize){size.width * controllersToShow, 0.0}];
 }
 
 - (void)layoutSubViewControllerToSelectedViewController
@@ -263,6 +264,12 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
     }
   }];
 }
+
+- (void)setShouldAllowSwipingToChangeTabs:(BOOL)shouldAllowSwipingToChangeTabs {
+    _shouldAllowSwipingToChangeTabs = shouldAllowSwipingToChangeTabs;
+    [self layoutViewControllers];
+}
+
 
 #pragma mark - KVO
 
