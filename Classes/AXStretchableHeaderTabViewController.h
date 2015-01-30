@@ -23,6 +23,7 @@
 @property (readonly, nonatomic) AXTabBar *tabBar;
 @property (weak, nonatomic) IBOutlet UIScrollView *containerView;
 @property (nonatomic) BOOL shouldBounceHeaderView;
+@property (nonatomic) BOOL shouldAllowSwipingToChangeTabs;
 
 // Layout
 - (void)layoutHeaderViewAndTabBar;
