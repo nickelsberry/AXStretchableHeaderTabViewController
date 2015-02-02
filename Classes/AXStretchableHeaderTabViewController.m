@@ -5,6 +5,8 @@
 
 #import "AXStretchableHeaderTabViewController.h"
 
+#define kNavigationBarTouchAreaPadding 50.0
+
 static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @"selectedIndex";
 
 @interface AXStretchableHeaderTabViewController ()
