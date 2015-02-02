@@ -13,8 +13,6 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
 
 @implementation AXStretchableHeaderTabViewController {
   CGFloat _headerViewTopConstraintConstant;
-    UITapGestureRecognizer *_tapGestureRecognizerForNavBar;
-    UITapGestureRecognizer *_tapGestureRecognizer;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -39,12 +37,6 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   
   [_tabBar sizeToFit];
   [self.view addSubview:_tabBar];
-    
-    self.shouldAllowSwipingToChangeTabs = YES;  // Default value
-    
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
-    tapGestureRecognizer.delegate = self;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void)dealloc
@@ -70,22 +62,6 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   
   [self layoutHeaderViewAndTabBar];
   [self layoutViewControllers];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    // From iOS7 onward, navigation bars have a swipe-to-left gesture to allow popping to the previous controller in the hierarchy. We're going to make good use of it to add another gesture recognizer to detect taps on the navigation bar:
-    UIView *navigationBarView = self.navigationController.interactivePopGestureRecognizer.view;
-    _tapGestureRecognizerForNavBar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
-    _tapGestureRecognizerForNavBar.delegate = self;
-    [navigationBarView addGestureRecognizer:_tapGestureRecognizerForNavBar];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    UIView *navigationBarView = self.navigationController.interactivePopGestureRecognizer.view;
-    [navigationBarView removeGestureRecognizer:_tapGestureRecognizerForNavBar];
 }
 
 - (void)didReceiveMemoryWarning
@@ -366,25 +342,6 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   _selectedIndex = selectedIndex;
   [self didChangeValueForKey:@"selectedIndex"];
   [self didChangeValueForKey:@"selectedViewController"];
-}
-
-#pragma mark - Gesture recognizer handling
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    if([touch.view isKindOfClass:[UINavigationBar class]]) {
-        // If the tap has been detected in the navigation bar, we need to allow some space for the back button and other controls in it to be detected...
-        CGFloat touchX = [touch locationInView:[self view]].x;
-        return (touchX > kNavigationBarTouchAreaPadding && touchX < touch.view.frame.size.width - (kNavigationBarTouchAreaPadding * 2));
-    }
-    return !([touch.view isKindOfClass:[UIScrollView class]]);
-}
-
-- (void)didTapOnView:(UITapGestureRecognizer *)sender {
-    [self handleTap];
-}
-
-- (void)handleTap {
-    // Subclass can implement this method to hold custom logic after touches in header view or tab view are received...
 }
 
 @end
