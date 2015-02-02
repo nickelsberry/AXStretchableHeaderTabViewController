@@ -37,6 +37,12 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   
   [_tabBar sizeToFit];
   [self.view addSubview:_tabBar];
+    
+    self.shouldAllowSwipingToChangeTabs = YES;  // Default value
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
+    tapGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
 - (void)dealloc
@@ -342,6 +348,20 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   _selectedIndex = selectedIndex;
   [self didChangeValueForKey:@"selectedIndex"];
   [self didChangeValueForKey:@"selectedViewController"];
+}
+
+#pragma mark - Gesture recognizer handling
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    return !([touch.view isKindOfClass:[UIScrollView class]]);
+}
+
+- (void)didTapOnView:(UITapGestureRecognizer *)sender {
+    [self handleTap];
+}
+
+- (void)handleTap {
+    // Subclasses can implement this method to hold custom logic after touches in header view or tab view are received...
 }
 
 @end
