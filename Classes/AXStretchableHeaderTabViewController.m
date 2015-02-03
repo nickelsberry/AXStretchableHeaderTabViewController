@@ -44,9 +44,10 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
     
     self.shouldAllowSwipingToChangeTabs = YES;  // Default value
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
-    tapGestureRecognizer.delegate = self;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
+    _tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
+    _tapGestureRecognizer.delegate = self;
+    _tapGestureRecognizer.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:_tapGestureRecognizer];
 }
 
 - (void)dealloc
@@ -81,6 +82,7 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
     UIView *navigationBarView = self.navigationController.interactivePopGestureRecognizer.view;
     _tapGestureRecognizerForNavBar = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapOnView:)];
     _tapGestureRecognizerForNavBar.delegate = self;
+    _tapGestureRecognizerForNavBar.cancelsTouchesInView = NO;
     [navigationBarView addGestureRecognizer:_tapGestureRecognizerForNavBar];
 }
 
@@ -375,8 +377,7 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     if([touch.view isKindOfClass:[UINavigationBar class]]) {
         // If the tap has been detected in the navigation bar, we need to allow some space for the back button and other controls in it to be detected...
-        CGFloat touchX = [touch locationInView:[self view]].x;
-        return (touchX > kNavigationBarTouchAreaPadding && touchX < touch.view.frame.size.width - (kNavigationBarTouchAreaPadding * 2));
+        return !([touch.view isKindOfClass:[UIButton class]] || [touch.view isKindOfClass:[UIBarButtonItem class]]);
     }
     return !([touch.view isKindOfClass:[UIScrollView class]]);
 }
