@@ -238,6 +238,7 @@ static NSString * const AXStretchableHeaderTabViewControllerSelectedIndexKey = @
   }];
   NSUInteger controllersToShow = (_shouldAllowSwipingToChangeTabs) ? _viewControllers.count : 1;
   [_containerView setContentSize:(CGSize){size.width * controllersToShow, 0.0}];
+  [self.view layoutSubviews];
 }
 
 - (void)layoutSubViewControllerToSelectedViewController
